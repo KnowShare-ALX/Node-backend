@@ -38,6 +38,22 @@ export const userSchema = new mongoose.Schema({
         type: String,
         enum: ['male', 'female', 'other']
     },
+    location: {
+      country: {
+        type: String,
+        maxlength: 50,
+        required: true,
+      },
+      state: {
+        type: String,
+        maxlength: 50,
+        required: true,
+      },
+      city: {
+        type: String,
+        maxlength: 50,
+      },
+    },
     profilePicture: {
       type: String,
     },
