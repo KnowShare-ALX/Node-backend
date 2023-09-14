@@ -1,14 +1,20 @@
 require('dotenv').config();  // To access .env file contents
-const express = require('express');
-const router = require('./routes/main');
+import express from 'express';
+import router from './routes/main';
+import dbClient from './utils/db';
+import authroute from './routes/auth';
 
 const app = express();
 
 const PORT = process.env.PORT || 3000; // port 3000 for dev purposes
 
-app.use(express.json());
-app.use('/', router);
+dbClient.db.on('connected', () => {
+    app.use(express.json());
+    app.use('/', router);
+    app.use('/auth', authroute)
 
-app.listen(PORT, () => {
-    console.log(`Server is running on Port ${PORT}`);
+    app.listen(PORT, () => {
+        console.log(`Server is running on Port ${PORT}`);
+    })
 })
+
