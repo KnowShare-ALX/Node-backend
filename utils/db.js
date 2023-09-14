@@ -11,7 +11,7 @@ export class DBClient {
         this.db = mongoose.connection;
         this.db.on('error', console.error.bind(console, 'MongoDB connection error:'));
         this.db.once('open', () => {
-            console.log('Connected to MongoDB');
+            console.log(`Connected to MongoDB @ ${process.env.DB_URI}`);
         });
     }
     isAlive() {
