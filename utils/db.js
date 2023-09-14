@@ -1,19 +1,16 @@
 require('dotenv').config()
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 export class DBClient {
     constructor() {
-        const host = process.env.Host || 'localhost';
-        const port = process.env.PORT || 27017;
-        const dataBase = process.env.DATA_BASE || 'know_share';
-        mongoose.connect(`mongodb://${host}:${port}/${dataBase}`, {
+        mongoose.connect(process.env.DB_URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             family: 4
         });
-        const db = mongoose.connection;
-        db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-        db.once('open', () => {
+        this.db = mongoose.connection;
+        this.db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+        this.db.once('open', () => {
             console.log('Connected to MongoDB');
         });
     }
