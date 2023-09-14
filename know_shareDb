@@ -1,0 +1,7 @@
+#!/usr/bin/bash
+
+# Set an environment variable
+export DB_URI='mongodb+srv://Diab:knowshare2023@cluster0.zvazzjz.mongodb.net/knowshare?retryWrites=true&w=majority'
+
+# Debugging: Print the value of DB_URI
+echo "DB_URI is set to: $DB_URI"
