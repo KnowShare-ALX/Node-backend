@@ -14,9 +14,9 @@ export class DBClient {
                 family: 4,
               }
             );
-        const db = mongoose.connection;
-        db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-        db.once('open', () => {
+        this.db = mongoose.connection;
+        this.db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+        this.db.once('open', () => {
             console.log('Connected to MongoDB');
         });
     }
