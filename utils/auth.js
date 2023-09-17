@@ -12,11 +12,11 @@ const JwtOptions = {
 };
 
 export default class AuthHandler {
-    static generateAcessToken(userDetails) {
+    static generateAcessToken(userDetails) { //userDetails should be an object {email}
         return jwt.sign(
             userDetails,
             process.env.TOKEN_SECRET,
-            {expiresIn: '86400s'}
+            { expiresIn: '1d' }
         );
     }
 }
