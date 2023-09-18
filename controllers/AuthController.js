@@ -1,11 +1,13 @@
 require('dotenv').config()
 import User from '../models/user';
-import bycrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { redisClient } from '../utils/redis';
+import AuthHandler from '../utils/auth';
+const bcrypt = require('bcrypt');
 
-const saltRounds = 10;
+
 const redisDuration = 24 * 60 * 60;
+
 
 class AuthController {
     static async login(req, res) {
@@ -16,13 +18,13 @@ class AuthController {
                     res.status(404).json({ error: 'User does not exist' });
                     return Promise.reject('User not found');
                 }
-                const isCorrect = await bycrypt.compare(password, user.password);
+                const isCorrect = await bcrypt.compare(password, user.password);
                 if (!isCorrect) {
                     res.status(401).json({ error: 'Incorrect Password' });
                     return;
                 }
                 console.log(user);
-                const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, { expiresIn: '1d' });
+                const token = jwt.sign({ id: user._id }, process.env.TOKEN_SECRET, { expiresIn: '1d' });
                 const key = `auth_${token}`;
                 await redisClient.set(key, user._id.toString(), redisDuration)
                         .then(() => console.log('Successfully set'))
@@ -43,14 +45,15 @@ class AuthController {
             const {
                 email,
                 password,
-                firstname,
-                lastname,
+                firstName,
+                lastName,
                 state, 
                 country, 
                 city, 
                 gender, 
                 dateOfBirth
              } = req.body;
+             console.log('this is email = ' + email);
             User.findOne({ email })
                 .then(async (user) => {
                     console.log(user)
@@ -59,21 +62,24 @@ class AuthController {
                         return Promise.reject('User already exists')
                     }
 
-                    return await bycrypt.hash(password, saltRounds);
+                    // return await bycrypt.hash(password, saltRounds);
+                    console.log('this is the password' + password);
+                    return await AuthHandler.hashPassword(password);
+                      
                 })
                 .then((hashedPassword) => {
                     const userObj = {
                         email: email,
                         password: hashedPassword,
-                        firstName: firstname,
-                        lastName: lastname,
+                        firstName: firstName,
+                        lastName: lastName,
                         location: {
                             country,
                             state,
                             city
                         },
                         gender: gender,
-                        dateOfBirth: dateOfBirth
+                        dateOfBirth: new Date(dateOfBirth)
                     }
 
                     const newUser = new User(userObj);
@@ -82,7 +88,7 @@ class AuthController {
                 .then(async (insertedUser) => {
                     const token = jwt.sign(
                         { id: insertedUser._id }, 
-                        process.env.SECRET_KEY, 
+                        process.env.TOKEN_SECRET, 
                         { expiresIn: '1d' }
                     );
                     const key = `auth_${token}`;
