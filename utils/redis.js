@@ -1,11 +1,12 @@
+require('dotenv').config()
 import { createClient } from 'redis';
 export class RedisClient {
     constructor() {
         this.client = createClient({
-            password: 'W4qWIR45oC8lYsD4kUiMqSu0mpwapBNx',
+            password: process.env.RD_PASSWORD,
             socket: {
-                host: 'redis-14915.c267.us-east-1-4.ec2.cloud.redislabs.com',
-                port: 14915
+                host: process.env.RD_HOST,
+                port: process.env.RD_PORT
             },
         });
         this.client.connect().then(() => {
