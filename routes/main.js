@@ -1,3 +1,4 @@
+import express from 'express'
 import AuthController from '../controllers/AuthController';
 import authenticateJWT from '../middlewares/AuthMiddleware';
 import UserController from '../controllers/UserController';
