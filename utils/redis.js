@@ -27,17 +27,17 @@ export class RedisClient {
         }
       }
     
-      async get(key) {
-        return await this.client.get(key);
-      }
+    async get(key) {
+      return await this.client.get(key);
+    }
     
-      async set(key, value, duration) {
-        return await this.client.set(key, value, 'EX', duration);
-      }
+    async set(key, value, duration) {
+      return await this.client.set(key, value, 'EX', duration);
+    }
     
-      async del(key) {
-        return await this.client.del(key);
-      }
+    async del(key) {
+      return await this.client.del(key);
+    }
 }
 export const redisClient = new RedisClient();
 export default redisClient;
