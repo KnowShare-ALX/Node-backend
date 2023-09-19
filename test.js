@@ -33,4 +33,5 @@ const checkConnection = () => {
   }
 
   console.log(dbClient.isAlive());
+  // console.log('number of users' + await dbClient.nbUsers());
 })();
