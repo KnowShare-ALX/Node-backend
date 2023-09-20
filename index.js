@@ -6,6 +6,7 @@ import dbClient from './utils/db';
 import passport from 'passport';
 import swaggerJSDoc from 'swagger-jsdoc';
 import { serve, setup } from 'swagger-ui-express';
+import corsMiddleware from './middlewares/CorsMiddleware';
 
 const app = express();
 
@@ -28,20 +29,7 @@ const PORT = process.env.PORT || 3000; // port 3000 for dev purposes
 dbClient.client.on('connected', () => {
     app.use(express.json());
     app.use(passport.initialize())
-    app.use((req, res, next) => {
-      res.header("Access-Control-Allow-Origin", "*");
-      res.header(
-        "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-      );
-      res.header("Access-Control-Expose-Headers", "x-auth-token");
-      if (req.method == "OPTIONS") {
-        res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET");
-        return res.status(200).json({});
-      }
-    
-      next();
-    });
+    app.use(corsMiddleware)
     app.use('/', router);
     app.use('/api-docs', serve, setup(swaggerDocs, { customCssUrl: CSS_URL }));
     app.listen(PORT, () => {
