@@ -15,7 +15,7 @@ const contentSchema = new mongoose.Schema({
     enum: ['article', 'video', 'course', 'picture'],
     required: true,
   },
-  pictureUrL: [
+  pictureUrl: [
     {
       type: String
     }

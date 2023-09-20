@@ -10,10 +10,10 @@ const storage = multer.memoryStorage(); // Store files in memory
 const upload = multer({ storage })
 const router = express.Router();
 
-router.post('/login', AuthController.login)
-router.post('/signup', AuthController.signup)
-router.get('/logout', authenticateJWT, AuthController.logout)
-router.put('/update-profile', authenticateJWT, UserController.updateProfile)
+router.post('/login', AuthController.login);
+router.post('/signup', AuthController.signup);
+router.post('/logout', authenticateJWT, AuthController.logout);
+router.put('/update-profile', authenticateJWT, UserController.updateProfile);
 router.post(
     '/profile-picture', 
     authenticateJWT,
