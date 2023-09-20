@@ -32,7 +32,6 @@ export const userSchema = new mongoose.Schema({
     dateOfBirth: {
         type: Date,
         default: null,
-        required: true
     },
     gender: {
         type: String,
@@ -42,12 +41,10 @@ export const userSchema = new mongoose.Schema({
       country: {
         type: String,
         maxlength: 50,
-        required: true,
       },
       state: {
         type: String,
         maxlength: 50,
-        required: true,
       },
       city: {
         type: String,
