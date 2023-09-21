@@ -1,0 +1,22 @@
+/login:
+  post:
+    description: "
+          When a user has been succesfully logged in a token is returned
+          which shiuld be added to the Authorization Header as Bearer token to authenticate subsequent requests
+          "
+    parameters:
+      - name: Email
+        description: User's Email
+        in: formData
+        required: true
+        type: string
+      - name: Password
+        description: User's Password
+        in: formData
+        required: true
+        type: string
+    responses:
+      200:
+        description: An Object with a jwt token
+      404:
+        description: User does not exist

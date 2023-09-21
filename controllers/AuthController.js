@@ -12,6 +12,14 @@ const redisDuration = 24 * 60 * 60;
 class AuthController {
     static async login(req, res) {
         const { email, password } = req.body
+        if (!email) {
+            res.status(400).json({ error: 'Email is required' });
+            return;
+        }
+        if (!password) {
+            res.status(400).json({ error: 'Password is required' });
+            return;
+        }
         User.findOne({ email })
             .then(async (user) => {
                 if (!user) {
@@ -47,13 +55,24 @@ class AuthController {
                 password,
                 firstName,
                 lastName,
-                state, 
-                country, 
-                city, 
-                gender, 
-                dateOfBirth
              } = req.body;
-             console.log('this is email = ' + email);
+            console.log('this is email = ' + email);
+            if (!email) {
+                res.status(400).json({ error: 'Email is required' });
+                return;
+            }
+            if (!password) {
+                res.status(400).json({ error: 'Password is required' });
+                return;
+            }
+            if (!firstName) {
+                res.status(400).json({ error: 'First Name is required' });
+                return;
+            }
+            if (!lastName) {
+                res.status(400).json({ error: 'Last Name is required' });
+                return;
+            }
             User.findOne({ email })
                 .then(async (user) => {
                     console.log(user)
@@ -73,13 +92,6 @@ class AuthController {
                         password: hashedPassword,
                         firstName: firstName,
                         lastName: lastName,
-                        location: {
-                            country,
-                            state,
-                            city
-                        },
-                        gender: gender,
-                        dateOfBirth: new Date(dateOfBirth)
                     }
 
                     const newUser = new User(userObj);
