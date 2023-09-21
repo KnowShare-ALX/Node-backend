@@ -108,6 +108,12 @@ export const userSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: 'Subscription',
       },
+    ],
+    courses: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: 'Course'
+      }
     ]
   });
 
