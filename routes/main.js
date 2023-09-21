@@ -2,6 +2,7 @@ import AuthController from '../controllers/AuthController';
 import authenticateJWT from '../middlewares/AuthMiddleware';
 import UserController from '../controllers/UserController';
 import FilesController from '../controllers/FilesController';
+import ContentController from '../controllers/ContentController';
 const express = require('express');
 import multer from 'multer';
 
@@ -20,15 +21,13 @@ router.post(
     upload.single('profilePicture'),
     FilesController.updateProfilePicture
     );
-router.get('/profile-picture/:filename', authenticateJWT, FilesController.profilePicture);
+router.get('/profile-picture/:id', FilesController.profilePicture);
+router.post(
+    '/uploadContent/',
+    authenticateJWT,
+    upload.array('files'),
+    ContentController.createContent
+    )
 
-// This route is for testing the authentication middleware
-// it will be removed
-router.get('/', authenticateJWT, (req, res) => {
-    res.status(200).json({
-        message: 'Home page accessed successfully!',
-        user: req.user
-    });
-})
 
 export default router;

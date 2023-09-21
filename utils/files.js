@@ -1,9 +1,15 @@
 const fs = require('fs');
 const path = require('path');
 
-class FileManager {
-  constructor(baseDirectory) {
-    this.baseDirectory = baseDirectory;
+import { initializeApp } from "firebase/app";
+import { getStorage, ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+const firebaseConfig  = require('../firebaseConfig');
+const fapp = initializeApp(firebaseConfig);
+const storage = getStorage(fapp, 'gs://knowshare-18e4c.appspot.com/');
+
+export default class FileManager {
+  constructor(){
+    this.baseDirectory = 'knowshare-files';
   }
 
   createDirectoriesIfNotExist(dirPath) {
@@ -20,6 +26,19 @@ class FileManager {
     fs.writeFileSync(filePath, fileData);
     return path.relative(baseDirectory, filePath);
   }
-}
 
-module.exports = FileManager;
+  static async saveFileToFirebaseStorage(filepath, fileType, fileData) {
+    try {
+      const storageRef = ref(storage, filepath);
+      const metadata = {
+        contentType: fileType,
+      };
+      const snapshot = await uploadBytesResumable(storageRef, fileData, metadata);
+      const downloadURL = await getDownloadURL(snapshot.ref);
+      return downloadURL;
+    } catch(error) {
+      console.error(error);
+      return;
+    }
+  }
+}
