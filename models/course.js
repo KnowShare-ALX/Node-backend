@@ -19,6 +19,10 @@ const courseSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  lastUpdated: {
+    type: Date,
+    default: Date.now,
+  },
   lectures: [
     {
         title: {
