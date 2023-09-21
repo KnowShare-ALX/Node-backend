@@ -12,21 +12,12 @@ const contentSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['article', 'video', 'course', 'picture'],
+    enum: ['article', 'video', 'course'],
     required: true,
   },
-  pictureUrl: [
-    {
-      type: String
-    }
-  ],
-  videoUrl: [
-    {
-      type: String
-    }
-  ],
-  articleUrl: {
-    type: String
+  contentURL: {
+    type: String,
+    required: true,
   },
   author: {
     type: mongoose.Schema.Types.ObjectId,

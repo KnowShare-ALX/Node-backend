@@ -44,7 +44,7 @@ const courseSchema = new mongoose.Schema({
             type: String,
             unique: true,
             maxlength: 100,
-            required: true,
+            require: true,
         },
         contents: [
             {
