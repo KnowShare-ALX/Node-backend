@@ -3,11 +3,11 @@ import express from 'express';
 import router from './routes/main';
 import dbClient from './utils/db';
 import passport from 'passport';
-import swaggerJSDoc from 'swagger-jsdoc';
 import { serve, setup } from 'swagger-ui-express';
 import corsMiddleware from './middlewares/CorsMiddleware';
 import { readFileSync } from 'fs';
 import { load } from 'js-yaml';
+import path from 'path';
 
 const app = express();
 
@@ -27,7 +27,8 @@ const app = express();
 //     apis: ["./docs/*.json"],
 // };
 
-const swaggerYaml = readFileSync('./docs/api.yaml', 'utf8');
+const file = path.join(process.cwd(), 'docs', 'api.yaml');
+const swaggerYaml = readFileSync(file, 'utf8');
 const swaggerJsDocs = load(swaggerYaml);
 const CSS_URL = "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css";
   
