@@ -27,7 +27,7 @@ const app = express();
 //     apis: ["./docs/*.json"],
 // };
 
-const swaggerYaml = readFileSync('./api.yaml', 'utf8');
+const swaggerYaml = readFileSync('./docs/api.yaml', 'utf8');
 const swaggerJsDocs = load(swaggerYaml);
 const CSS_URL = "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css";
   
