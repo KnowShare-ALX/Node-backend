@@ -10,23 +10,6 @@ import { load } from 'js-yaml';
 import path from 'path';
 
 const app = express();
-
-// const swaggerOptions = {
-//     definition: {
-//       info: {
-//         title: "Knowshare Backend API",
-//         version: '1.0.0',
-//       },
-//       servers: [
-//         {
-//           url: "https://knowshare-backend-alx.vercel.app/",
-//           description: "My API Documentation",
-//         },
-//       ],
-//     },
-//     apis: ["./docs/*.json"],
-// };
-
 const file = path.join(process.cwd(), 'docs', 'api.yaml');
 const swaggerYaml = readFileSync(file, 'utf8');
 const swaggerJsDocs = load(swaggerYaml);

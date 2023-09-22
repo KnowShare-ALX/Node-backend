@@ -2,7 +2,7 @@ swagger: "2.0"
 info:
   title: Knowshare API
   description: This is Knowshare Api documentation
-  version: 1.0
+  version: 1.0.0
   servers:
     - url: "http://localhost:3000/"
       description: This is the local server
@@ -35,3 +35,67 @@ paths:
           description: An Object with a jwt token
         404:
           description: User does not exist
+  /signup:
+    post:
+      description: Sign up new Users
+      produces:
+      - application/json
+      parameters:
+        - name: Email
+          description: User's Email
+          in: body
+          required: true
+          type: string
+        - name: Password
+          description: User's Password
+          in: body
+          required: true
+          type: string
+        - name: First Name
+          description: User's firstname
+          in: body
+          required: true
+          type: string
+        - name: Last Name
+          description: User's Lastname
+          in: body
+          required: true
+          type: string
+        - name: state
+          description: User's state
+          in: body
+          required: true
+          type: string
+        - name: Country
+          description: User's country
+          in: body
+          required: true
+          type: string
+        - name: City
+          description: User's City
+          in: body
+          required: true
+          type: string
+        - name: Gender
+          description: User's Gender
+          in: body
+          required: true
+          type: string
+        - name: Date Of Birth
+          description: User's DOB
+          in: body
+          required: true
+          type: string
+      responses:
+        201:
+          description: An Object with user details
+        409:
+          description: User already exists
+  /logout:
+    post:
+      description: Ends a user's session and logs them out
+      responses:
+        200:
+          description: Logged out successfully
+        404:
+          description: Token not found in Redis
