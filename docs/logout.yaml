@@ -1,8 +1,9 @@
-/logout:
-  post:
-    description: Ends a user's session and logs them out
-    responses:
-      200:
-        description: Logged out successfully
-      404:
-        description: Token not found in Redis
+paths:
+  /logout:
+    post:
+      description: Ends a user's session and logs them out
+      responses:
+        200:
+          description: Logged out successfully
+        404:
+          description: Token not found in Redis
