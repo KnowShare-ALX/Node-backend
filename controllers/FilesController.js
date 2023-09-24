@@ -50,6 +50,12 @@ export default class FilesController {
       if (!updatedUser) {
         return res.status(404).json({ msg: 'User not found' });
       }
+      const delStatus = await FileManager.deleteFileFromFirebaseStorage(formerPictureUrl);
+      if (!delStatus) {
+        console.error('failed to delete item from firebaseStorage');
+      } else{
+        console.log(`deleted item ${formerPictureUrl} from firebaseStorage`);
+      }
       const sensitizedResult = BaseController.removeSensitiveInfo(updatedUser);
       console.log(`user: ${userId} updated profile picture successfully`);
 

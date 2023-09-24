@@ -1,8 +1,9 @@
 const fs = require('fs');
 const path = require('path');
+import redisClient from "./redis";
 
 import { initializeApp } from "firebase/app";
-import { getStorage, ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import { getStorage, ref, getDownloadURL, uploadBytesResumable, deleteObject } from "firebase/storage";
 const firebaseConfig  = require('../firebaseConfig');
 const fapp = initializeApp(firebaseConfig);
 const storage = getStorage(fapp, 'gs://knowshare-18e4c.appspot.com/');
@@ -35,10 +36,28 @@ export default class FileManager {
       };
       const snapshot = await uploadBytesResumable(storageRef, fileData, metadata);
       const downloadURL = await getDownloadURL(snapshot.ref);
+      await redisClient.set(downloadURL, filepath)
       return downloadURL;
     } catch(error) {
       console.error(error);
       return;
+    }
+  }
+
+  static async deleteFileFromFirebaseStorage(fileUrl) {
+    try {
+      const filepath  = await redisClient.get(fileUrl);
+      if (!filepath) {
+        throw new Error('filepath does not exist in redis cache!');
+      }
+      const fileRef = ref(storage, filepath);
+      await deleteObject(fileRef)
+      console.log(`file ${fileRef} deleted successfully`);
+      await redisClient.del(fileUrl);
+      return true;
+    } catch(error) {
+      console.error(`firebaseDeletion: ${error}`);
+      return false
     }
   }
 }

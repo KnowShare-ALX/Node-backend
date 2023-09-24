@@ -61,4 +61,25 @@ router.post(
     CourseController.addContentToCourse
 )
 
+/**
+ * GET /contents/get
+ *
+ * Endpoint to fetch a content.
+ * The request should include the following query parameters:
+ * - contentId: The unique identifier of the content to be added.
+ *
+ * Authentication is required to access this endpoint
+ * Example request:
+ * GET /contents/get?contentId=123
+ *
+ * @function getContentById
+ * @memberof ContentController
+ * @param {Request} req - Express Request object.
+ * @param {Response} res - Express Response object.
+ */
+router.get(
+    '/contents/get',
+    authenticateJWT,
+    ContentController.getContentById
+)
 export default router;
