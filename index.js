@@ -5,6 +5,7 @@ import dbClient from './utils/db';
 import passport from 'passport';
 import swaggerJSDoc from 'swagger-jsdoc';
 import { serve, setup } from 'swagger-ui-express';
+import corsMiddleware from './middlewares/CorsMiddleware';
 
 const app = express();
 

@@ -12,12 +12,21 @@ const contentSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['article', 'video', 'course'],
+    enum: ['article', 'video', 'course', 'picture'],
     required: true,
   },
-  contentURL: {
-    type: String,
-    required: true,
+  pictureUrl: [
+    {
+      type: String
+    }
+  ],
+  videoUrl: [
+    {
+      type: String
+    }
+  ],
+  articleUrl: {
+    type: String
   },
   author: {
     type: mongoose.Schema.Types.ObjectId,
@@ -50,10 +59,12 @@ const contentSchema = new mongoose.Schema({
       },
     },
   ],
-  course: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Course', // Reference to a Course model for content that is part of a course
-  },
+  course: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Course',
+    },
+  ],
   reports: [
     {
       author: {

@@ -3,6 +3,7 @@ import authenticateJWT from '../middlewares/AuthMiddleware';
 import UserController from '../controllers/UserController';
 import FilesController from '../controllers/FilesController';
 import ContentController from '../controllers/ContentController';
+import CourseController from '../controllers/CourseController';
 const express = require('express');
 import multer from 'multer';
 
@@ -28,6 +29,36 @@ router.post(
     upload.array('files'),
     ContentController.createContent
     )
+router.post(
+    '/courses/create',
+    authenticateJWT,
+    CourseController.createCourse
+)
+/**
+ * POST /courses/addContent
+ *
+ * Endpoint to add content to a course. This endpoint allows users to associate content with a specific course section.
+ * The request should include the following query parameters:
+ * - contentId: The unique identifier of the content to be added.
+ * - parentId: The unique identifier of the parent course to which the content will be added.
+ * - sectionTitle: The title of the section within the course where the content will be added.
+ *
+ * Authentication is required to access this endpoint, and files can be uploaded as part of the request.
+ *
+ * Example request:
+ * POST /courses/addContent?contentId=123&parentId=456&sectionTitle=Introduction
+ *
+ * @function addContentToCourse
+ * @memberof CourseController
+ * @param {Request} req - Express Request object.
+ * @param {Response} res - Express Response object.
+ */
 
+router.post(
+    '/courses/addContent/',
+    authenticateJWT,
+    upload.array('files'),
+    CourseController.addContentToCourse
+)
 
 export default router;
