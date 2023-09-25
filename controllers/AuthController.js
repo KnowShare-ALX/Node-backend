@@ -31,7 +31,6 @@ class AuthController {
                     res.status(401).json({ error: 'Incorrect Password' });
                     return;
                 }
-                console.log(user);
                 const token = jwt.sign({ id: user._id }, process.env.TOKEN_SECRET, { expiresIn: '1d' });
                 const key = `auth_${token}`;
                 await redisClient.set(key, user._id.toString(), redisDuration)
@@ -56,7 +55,6 @@ class AuthController {
                 firstName,
                 lastName,
              } = req.body;
-            console.log('this is email = ' + email);
             if (!email) {
                 res.status(400).json({ error: 'Email is required' });
                 return;

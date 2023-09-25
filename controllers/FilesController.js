@@ -69,6 +69,9 @@ export default class FilesController {
   static async profilePicture(req, res) {
     try {
       const { id } = req.params;
+      if (!id) {
+        return res.status(400).json({error: 'missing parameter id!'})
+      }
       const user = await User.findById(id);
   
       if (!user) {
