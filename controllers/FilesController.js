@@ -1,8 +1,13 @@
 import { validationResult } from 'express-validator';
-require('dotenv').configure
+require('dotenv').config();
 import User from '../models/user';
 import FileManager from '../utils/files';
 import { BaseController } from './BaseController';
+import Content from '../models/content';
+
+const videoPath = 'files/contents/videos';
+const picturePath = 'files/contents/pictures';
+const articlePath = 'files/contents/articles';
 
 export default class FilesController {
   static async updateProfilePicture(req, res) {
@@ -45,6 +50,12 @@ export default class FilesController {
       if (!updatedUser) {
         return res.status(404).json({ msg: 'User not found' });
       }
+      const delStatus = await FileManager.deleteFileFromFirebaseStorage(formerPictureUrl);
+      if (!delStatus) {
+        console.error('failed to delete item from firebaseStorage');
+      } else{
+        console.log(`deleted item ${formerPictureUrl} from firebaseStorage`);
+      }
       const sensitizedResult = BaseController.removeSensitiveInfo(updatedUser);
       console.log(`user: ${userId} updated profile picture successfully`);
 
@@ -76,5 +87,76 @@ export default class FilesController {
       return res.status(500).json({ error: 'Internal server error' });
     }
   }
-  
+
+  static async createContent(req, res) {
+    try {
+      const errors = validationResult(req);
+
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+
+      const {
+        title,
+        description,
+        type,
+      } = req.body;
+      const userId = req.user._id;
+
+
+      const content = new Content({
+        title,
+        description,
+        type,
+        author: userId,
+      });
+      // Process uploaded files based on their types (e.g., pictures, videos, articles)
+      for (const file of req.files) {
+        if (file.mimetype.startsWith('image')) {
+          const fileName = `${userId}-${Date.now()}.jpg`;
+          const fileUrl = await FileManager.saveFileToFirebaseStorage(
+            `${picturePath}/${fileName}`,
+            file.mimetype,
+            file.buffer
+          );
+          if (!fileUrl) {
+            res.status(500).json({ error: 'internal server error' });
+            return;
+          }
+          content.pictureUrl.push(fileUrl);
+
+        } else if (file.mimetype.startsWith('video')) {
+          const fileName = `${userId}-${Date.now()}.mp4`;
+          const fileUrl = await FileManager.saveFileToFirebaseStorage(
+            `${videoPath}/${fileName}`,
+            file.mimetype,
+            file.buffer
+          );
+          if (!fileUrl) {
+            res.status(500).json({ error: 'internal server error' });
+            return;
+          }
+          content.videoUrl.push(fileUrl);
+        } else {
+          const fileName = `${userId}-${Date.now()}.txt`;
+          const fileUrl = await FileManager.saveFileToFirebaseStorage(
+            `${articlePath}/${fileName}`,
+            file.mimetype,
+            file.buffer
+          );
+          if (!fileUrl) {
+            res.status(500).json({ error: 'internal server error' });
+            return;
+          }
+          content.articleUrl = fileUrl;
+        }
+      }
+
+      // Save the content to the database
+      return await content.save();
+    } catch (error) {
+      console.error(error);
+      return;
+    }
+  }
 }

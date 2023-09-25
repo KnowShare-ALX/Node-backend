@@ -33,13 +33,18 @@ const courseSchema = new mongoose.Schema({
         contentId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Content',
+            unique: true
         },
     },
   ],
+  requirements: {
+    type: String
+  },
   subscribers: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
+      unique: true
     },
   ],
   sections: [
@@ -48,7 +53,7 @@ const courseSchema = new mongoose.Schema({
             type: String,
             unique: true,
             maxlength: 100,
-            require: true,
+            required: true,
         },
         contents: [
             {
@@ -64,6 +69,7 @@ const courseSchema = new mongoose.Schema({
       author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
+        unique: true
       },
       reason: {
         type: String,
@@ -80,6 +86,7 @@ const courseSchema = new mongoose.Schema({
       author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
+        unique: true
       },
     },
   ],
@@ -91,6 +98,15 @@ const courseSchema = new mongoose.Schema({
   cost: {
     type: Number,
   }
+});
+
+courseSchema.pre('save', function(next) {
+  const sections = this.sections;
+  sections.forEach((section) => {
+    const uniqueContents = [...new Set(section.contents)]; // Remove duplicates
+    section.contents = uniqueContents;
+  });
+  next();
 });
 
 const Course = mongoose.model('Course', courseSchema);
