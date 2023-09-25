@@ -84,4 +84,5 @@ router.get(
     authenticateJWT,
     ContentController.getContentById
 )
+
 export default router;
