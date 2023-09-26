@@ -185,6 +185,10 @@ paths:
           example:
             - title: Section 1
               contents: [12345abc, 67890def]
+        - name: requirements
+          in: formData
+          description: Requirements for the course
+          type: string
         - name: paid
           in: formData
           description: Indicates if the course is paid (true or false).
@@ -197,6 +201,48 @@ paths:
       responses:
         201:
           description: Course created successfully.
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+                description: title of the course
+              description:
+                type: string
+                description: description of the course
+              author:
+                type: string
+                description: creator of the course
+              lectures:
+                type: array
+                items:
+                  type: string
+                description: course lectures
+              subscribers:
+                type: array
+                items:
+                  type: string
+                description: Subscribers of the course
+              sections:
+                type: array
+                items:
+                  type: string
+                description: Course sections
+              paid:
+                type: boolean
+                description: represents a free or paid course
+              cost:
+                type: number
+                description: price for a paid course
+              _id:
+                type: string
+                description: id of the course
+              reports:
+                type: array
+                description: users who reported the course
+              likes:
+                type: array
+                description: users who liked the course
         400:
           description: Bad request - Validation errors.
         401:
@@ -217,7 +263,6 @@ paths:
         - name: contentId
           in: query
           description: The unique identifier of the content to be added.
-          required: true
           type: string
         - name: parentId
           in: query
@@ -358,6 +403,9 @@ paths:
       summary: Fetch user information
       description: Fetch detailed user information by providing the user's unique identifier.
       parameters:
+        - name: Authorization
+          in: header
+          description: Bearer token for user authentication.
         - name: userId
           in: path
           description: The unique identifier of the user.

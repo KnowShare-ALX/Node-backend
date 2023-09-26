@@ -103,7 +103,7 @@ router.get(
  * @param {Response} res - Express Response object.
  */
 router.get(
-    '/user/:userId/profile/',
+    '/user/:userEmail/profile/',
     authenticateJWT,
     UserController.getUserInfo
 );

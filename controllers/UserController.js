@@ -59,11 +59,11 @@ export default class UserController {
       if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
       }
-      const { userId } = req.params;
-      if (!userId) {
+      const { userEmail } = req.params;
+      if (!userEmail) {
         return res.status(400).json({error: 'invalid or missing parameter'});
       }
-      const user = await User.findById(userId);
+      const user = await User.findOne({ email: userEmail });
       if (!user) {
         return res.status(404).json({error: 'user not found'});
       }
