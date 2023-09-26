@@ -74,7 +74,7 @@ paths:
           description: Logged out successfully
         404:
           description: Token not found in Redis
-  /profile-picture:
+  /settings/profilePicture:
     post:
       summary: Update user profile picture
       description: Upload and update a user's profile picture.
@@ -98,7 +98,7 @@ paths:
           description: User not found or no profile picture available.
         500:
           description: Internal server error.
-  /uploadContent/:
+  /contents/upload/:
     post:
       summary: Upload content
       description: Upload and create new content.
@@ -247,7 +247,7 @@ paths:
         500:
           description: Internal server error.
 
-  /update-profile:
+  /settings/profile:
     put:
       summary: Update user profile
       description: Update the user's profile information.
@@ -301,7 +301,7 @@ paths:
         500:
           description: Internal server error.
 
-  /profile-picture/{id}:
+  /user/profilePicture/:id:
     get:
       summary: Get user profile picture
       description: Retrieve the profile picture of a user by their unique identifier (ID).
@@ -351,6 +351,104 @@ paths:
           description: Unauthorized - Invalid or missing token.
         404:
           description: Content not found.
+        500:
+          description: Internal server error.
+  /user/:userId/profile:
+    get:
+      summary: Fetch user information
+      description: Fetch detailed user information by providing the user's unique identifier.
+      parameters:
+        - name: userId
+          in: path
+          description: The unique identifier of the user.
+          required: true
+          type: string
+      responses:
+        200:
+          description: User information retrieved successfully.
+          schema:
+            type: object
+            properties:
+              userId:
+                type: string
+                description: The unique identifier of the user.
+              firstName:
+                type: string
+                description: The first name of the user.
+              lastName:
+                type: string
+                description: The last name of the user.
+              joinedDate:
+                type: string
+                format: date-time
+                description: The date and time when the user joined.
+              dateOfBirth:
+                type: string
+                format: date
+                description: The user's date of birth.
+              gender:
+                type: string
+                enum: [male, female, other]
+                description: The user's gender.
+              location:
+                type: object
+                properties:
+                  country:
+                    type: string
+                    description: The user's country.
+                  state:
+                    type: string
+                    description: The user's state.
+                  city:
+                    type: string
+                    description: The user's city.
+              profilePicture:
+                type: string
+                description: URL of the user's profile picture.
+              credentials:
+                type: array
+                items:
+                  type: string
+                description: List of user's credentials.
+              followers:
+                type: array
+                items:
+                  type: string
+                description: List of user's followers (user IDs).
+              following:
+                type: array
+                items:
+                  type: string
+                description: List of users being followed by this user (user IDs).
+              topicsFollowing:
+                type: array
+                items:
+                  type: string
+                description: List of topics followed by the user (topic IDs).
+              post:
+                type: array
+                items:
+                  type: string
+                description: List of posts authored by the user (post IDs).
+              forums:
+                type: array
+                items:
+                  type: string
+                description: List of forums associated with the user (forum IDs).
+              subscribers:
+                type: array
+                items:
+                  type: string
+                description: List of subscribers to the user (subscription IDs).
+              courses:
+                type: array
+                items:
+                  type: string
+                description: List of courses associated with the user (course IDs).
+        400:
+          description: Invalid or missing parameter.
+        404:
+          description: User not found.
         500:
           description: Internal server error.
 
