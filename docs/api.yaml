@@ -398,7 +398,7 @@ paths:
           description: Content not found.
         500:
           description: Internal server error.
-  /user/:userId/profile:
+  /user/:emailId/profile:
     get:
       summary: Fetch user information
       description: Fetch detailed user information by providing the user's unique identifier.
@@ -406,9 +406,9 @@ paths:
         - name: Authorization
           in: header
           description: Bearer token for user authentication.
-        - name: userId
+        - name: emailId
           in: path
-          description: The unique identifier of the user.
+          description: The User's email.
           required: true
           type: string
       responses:
