@@ -61,31 +61,6 @@ paths:
           in: body
           required: true
           type: string
-        - name: state
-          description: User's state
-          in: body
-          required: true
-          type: string
-        - name: Country
-          description: User's country
-          in: body
-          required: true
-          type: string
-        - name: City
-          description: User's City
-          in: body
-          required: true
-          type: string
-        - name: Gender
-          description: User's Gender
-          in: body
-          required: true
-          type: string
-        - name: Date Of Birth
-          description: User's DOB
-          in: body
-          required: true
-          type: string
       responses:
         201:
           description: An Object with user details
@@ -99,3 +74,560 @@ paths:
           description: Logged out successfully
         404:
           description: Token not found in Redis
+  /profile-picture:
+    post:
+      summary: Update user profile picture
+      description: Upload and update a user's profile picture.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Bearer token for user authentication.
+          required: true
+          type: string
+        - name: profilePicture
+          in: formData
+          description: User's profile picture file (image).
+          required: true
+          type: file
+      responses:
+        200:
+          description: Profile picture updated successfully.
+        401:
+          description: Unauthorized - Invalid or missing token.
+        404:
+          description: User not found or no profile picture available.
+        500:
+          description: Internal server error.
+  /uploadContent/:
+    post:
+      summary: Upload content
+      description: Upload and create new content.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Bearer token for user authentication.
+          required: true
+          type: string
+        - name: title
+          in: formData
+          description: Title of the content.
+          required: true
+          type: string
+        - name: description
+          in: formData
+          description: Description of the content.
+          type: string
+        - name: type
+          in: formData
+          description: Type of content (article, video, course, picture).
+          required: true
+          type: string
+        - name: files
+          in: formData
+          description: Files to upload (e.g., images, videos, articles).
+          required: true
+          type: file
+      responses:
+        201:
+          description: Content created successfully.
+        400:
+          description: Bad request - Validation errors.
+        401:
+          description: Unauthorized - Invalid or missing token.
+        500:
+          description: Internal server error.
+  /courses/create:
+    post:
+      summary: Create a new course
+      description: Create a new course with the specified details.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Bearer token for user authentication.
+          required: true
+          type: string
+        - name: title
+          in: formData
+          description: Title of the course.
+          required: true
+          type: string
+        - name: description
+          in: formData
+          description: Description of the course.
+          type: string
+        - name: lectures
+          in: formData
+          description: List of lectures in the course.
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+              contentId:
+                type: string
+          example:
+            - title: Lecture 1
+              contentId: 12345abc
+        - name: sections
+          in: formData
+          description: List of sections in the course.
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+              contents:
+                type: array
+                items:
+                  type: string
+          example:
+            - title: Section 1
+              contents: [12345abc, 67890def]
+        - name: paid
+          in: formData
+          description: Indicates if the course is paid (true or false).
+          required: true
+          type: boolean
+        - name: cost
+          in: formData
+          description: Cost of the paid course (if applicable).
+          type: number
+      responses:
+        201:
+          description: Course created successfully.
+        400:
+          description: Bad request - Validation errors.
+        401:
+          description: Unauthorized - Invalid or missing token.
+        500:
+          description: Internal server error.
+
+  /courses/addContent:
+    post:
+      summary: Add content to a course
+      description: Add content to a specific course section.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Bearer token for user authentication.
+          required: true
+          type: string
+        - name: contentId
+          in: query
+          description: The unique identifier of the content to be added.
+          required: true
+          type: string
+        - name: parentId
+          in: query
+          description: The unique identifier of the parent course to which the content will be added.
+          required: true
+          type: string
+        - name: sectionTitle
+          in: query
+          description: The title of the section within the course where the content will be added.
+          required: true
+          type: string
+        - name: files
+          in: formData
+          description: Files to upload as part of the request (e.g., images, videos, articles).
+          type: file
+      responses:
+        201:
+          description: Content added to the course successfully.
+        400:
+          description: Bad request - Validation errors or missing parameters.
+        401:
+          description: Unauthorized - Invalid or missing token.
+        403:
+          description: Forbidden - User cannot perform this operation.
+        404:
+          description: Not found - Invalid course or content id.
+        500:
+          description: Internal server error.
+
+  /update-profile:
+    put:
+      summary: Update user profile
+      description: Update the user's profile information.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Bearer token for user authentication.
+          required: true
+          type: string
+        - name: bio
+          in: formData
+          description: User's biography.
+          type: string
+        - name: lastName
+          in: formData
+          description: User's last name.
+          type: string
+        - name: firstName
+          in: formData
+          description: User's first name.
+          type: string
+        - name: dateOfBirth
+          in: formData
+          description: User's date of birth.
+          type: string
+          format: date
+        - name: credentials
+          in: formData
+          description: User's credentials (e.g., certifications).
+          type: array
+          items:
+            type: string
+        - name: location
+          in: formData
+          description: User's location (e.g., country, state, city).
+          type: object
+          properties:
+            country:
+              type: string
+            state:
+              type: string
+            city:
+              type: string
+      responses:
+        200:
+          description: Profile updated successfully.
+        400:
+          description: Bad request - Invalid fields to update.
+        401:
+          description: Unauthorized - Invalid or missing token.
+        500:
+          description: Internal server error.
+
+  /profile-picture/{id}:
+    get:
+      summary: Get user profile picture
+      description: Retrieve the profile picture of a user by their unique identifier (ID).
+      parameters:
+        - name: id
+          in: path
+          description: The unique identifier (ID) of the user.
+          required: true
+          type: string
+      responses:
+        200:
+          description: User profile picture retrieved successfully. The response will be a redirect to the profile picture URL.
+          schema:
+            type: object
+          headers:
+            Location:
+              type: string
+              description: URL to the user's profile picture.
+        404:
+          description: User not found or no profile picture available.
+        500:
+          description: Internal server error.
+
+  /contents/get:
+    get:
+      summary: Get content by ID
+      description: Retrieve content by its unique identifier (ID).
+      parameters:
+        - name: Authorization
+          in: header
+          description: Bearer token for user authentication.
+          required: true
+          type: string
+        - name: contentId
+          in: query
+          description: The unique identifier (ID) of the content to be retrieved.
+          required: true
+          type: string
+      responses:
+        200:
+          description: Content retrieved successfully.
+          schema:
+            $ref: '#/definitions/Content' # Reference to the Content model definition.
+        400:
+          description: Bad request - Invalid or missing parameters.
+        401:
+          description: Unauthorized - Invalid or missing token.
+        404:
+          description: Content not found.
+        500:
+          description: Internal server error.
+
+definitions:
+  User:
+    type: object
+    properties:
+      email:
+        type: string
+        description: The user's email.
+      password:
+        type: string
+        description: The user's password.
+      firstName:
+        type: string
+        description: The user's first name.
+      lastName:
+        type: string
+        description: The user's last name.
+      biography:
+        type: string
+        description: The user's biography.
+      joinedDate:
+        type: string
+        format: date-time
+        description: The date and time when the user joined.
+      dateOfBirth:
+        type: string
+        format: date-time
+        description: The user's date of birth.
+      gender:
+        type: string
+        enum:
+          - male
+          - female
+          - other
+        description: The user's gender.
+      location:
+        type: object
+        properties:
+          country:
+            type: string
+            description: The country where the user is located.
+          state:
+            type: string
+            description: The state where the user is located.
+          city:
+            type: string
+            description: The city where the user is located.
+      profilePicture:
+        type: string
+        description: URL of the user's profile picture.
+      credentials:
+        type: array
+        items:
+          type: string
+        description: User's credentials.
+      followers:
+        type: array
+        items:
+          type: string
+        description: IDs of users who are following this user.
+      following:
+        type: array
+        items:
+          type: string
+        description: IDs of users this user is following.
+      topicsFollowing:
+        type: array
+        items:
+          type: string
+        description: IDs of topics this user is following.
+      post:
+        type: array
+        items:
+          type: string
+        description: IDs of posts created by this user.
+      blackList:
+        type: object
+        properties:
+          users:
+            type: array
+            items:
+              type: string
+            description: IDs of users in the user's blacklist.
+          topics:
+            type: array
+            items:
+              type: string
+            description: IDs of topics in the user's blacklist.
+      forums:
+        type: array
+        items:
+          type: string
+        description: IDs of forums associated with this user.
+      subscribers:
+        type: array
+        items:
+          type: string
+        description: IDs of subscribers to this user.
+      courses:
+        type: array
+        items:
+          type: string
+        description: IDs of courses associated with this user.
+  Course:
+    type: object
+    properties:
+      title:
+        type: string
+        description: The title of the course.
+      description:
+        type: string
+        description: The description of the course.
+      author:
+        type: string
+        description: The ID of the author of the course.
+      createdAt:
+        type: string
+        format: date-time
+        description: The date and time when the course was created.
+      lastUpdated:
+        type: string
+        format: date-time
+        description: The date and time when the course was last updated.
+      lectures:
+        type: array
+        items:
+          type: object
+          properties:
+            title:
+              type: string
+              description: The title of a lecture.
+            contentId:
+              type: string
+              description: The unique identifier (ID) of the content associated with the lecture.
+      requirements:
+        type: string
+        description: Course requirements.
+      subscribers:
+        type: array
+        items:
+          type: string
+        description: IDs of users who have subscribed to this course.
+      sections:
+        type: array
+        items:
+          type: object
+          properties:
+            title:
+              type: string
+              description: The title of a section.
+            contents:
+              type: array
+              items:
+                type: string
+              description: IDs of contents within the section.
+      reports:
+        type: array
+        items:
+          type: object
+          properties:
+            author:
+              type: string
+              description: The ID of the author of the report.
+            reason:
+              type: string
+              description: The reason for the report.
+            createdAt:
+              type: string
+              format: date-time
+              description: The date and time when the report was created.
+      likes:
+        type: array
+        items:
+          type: object
+          properties:
+            author:
+              type: string
+              description: The ID of the author of the like.
+      paid:
+        type: boolean
+        description: Indicates whether the course is paid or not.
+      cost:
+        type: number
+        description: The cost of the paid course.
+  Content:
+    type: object
+    properties:
+      title:
+        type: string
+        description: The title of the content.
+      description:
+        type: string
+        description: The description of the content.
+      type:
+        type: string
+        enum:
+          - article
+          - video
+          - course
+          - picture
+        description: The type of content (article, video, course, picture).
+      pictureUrl:
+        type: array
+        items:
+          type: string
+        description: URLs of pictures associated with the content.
+      videoUrl:
+        type: array
+        items:
+          type: string
+        description: URLs of videos associated with the content.
+      articleUrl:
+        type: string
+        description: URL of an article associated with the content.
+      author:
+        type: string
+        description: The ID of the author of the content.
+      createdAt:
+        type: string
+        format: date-time
+        description: The date and time when the content was created.
+      subscribers:
+        type: array
+        items:
+          type: string
+        description: IDs of users who have subscribed to the content.
+      comments:
+        type: array
+        items:
+          type: object
+          properties:
+            author:
+              type: string
+              description: The ID of the author of the comment.
+            text:
+              type: string
+              description: The text of the comment.
+            createdAt:
+              type: string
+              format: date-time
+              description: The date and time when the comment was created.
+      course:
+        type: array
+        items:
+          type: string
+        description: IDs of courses associated with the content.
+      reports:
+        type: array
+        items:
+          type: object
+          properties:
+            author:
+              type: string
+              description: The ID of the author of the report.
+            reason:
+              type: string
+              description: The reason for the report.
+            createdAt:
+              type: string
+              format: date-time
+              description: The date and time when the report was created.
+      likes:
+        type: array
+        items:
+          type: object
+          properties:
+            author:
+              type: string
+              description: The ID of the author of the like.
+      topic:
+        type: string
+        description: The ID of the topic associated with the content.
+      tags:
+        type: array
+        items:
+          type: string
+        description: IDs of tags associated with the content.
+
