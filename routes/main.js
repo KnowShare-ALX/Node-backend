@@ -15,25 +15,29 @@ const router = express.Router();
 router.post('/login', AuthController.login);
 router.post('/signup', AuthController.signup);
 router.post('/logout', authenticateJWT, AuthController.logout);
-router.put('/update-profile', authenticateJWT, UserController.updateProfile);
+
+
+router.put('/settings/profile', authenticateJWT, UserController.updateProfile);
+
 router.post(
-    '/profile-picture', 
+    '/settings/profilePicture', 
     authenticateJWT,
     upload.single('profilePicture'),
     FilesController.updateProfilePicture
-    );
-router.get('/profile-picture/:id', FilesController.profilePicture);
+);
+router.get('/user/profilePicture/:id', FilesController.profilePicture);
+
 router.post(
-    '/uploadContent/',
+    '/contents/upload/',
     authenticateJWT,
     upload.array('files'),
     ContentController.createContent
-    )
+);
 router.post(
     '/courses/create',
     authenticateJWT,
     CourseController.createCourse
-)
+);
 /**
  * POST /courses/addContent
  *
@@ -59,7 +63,7 @@ router.post(
     authenticateJWT,
     upload.array('files'),
     CourseController.addContentToCourse
-)
+);
 
 /**
  * GET /contents/get
@@ -81,6 +85,28 @@ router.get(
     '/contents/get',
     authenticateJWT,
     ContentController.getContentById
-)
+);
+
+/**
+ * GET /user/:userId/profile
+ *
+ * Endpoint to fetch user info.
+ * The request should include the following query parameters:
+ * - userId: The unique identifier of the user.
+ * Authentication is required to access this endpoint
+ * Example request:
+ * GET /user/123/profile
+ *
+ * @function getUserInfo
+ * @memberof UserController
+ * @param {Request} req - Express Request object.
+ * @param {Response} res - Express Response object.
+ */
+router.get(
+    '/user/:userId/profile/',
+    authenticateJWT,
+    UserController.getUserInfo
+);
+
 
 export default router;

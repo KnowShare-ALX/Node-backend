@@ -1,5 +1,7 @@
 import User from '../models/user';
 import { BaseController } from './BaseController';
+const {validationResult} = require('express-validator');
+
 
 export default class UserController {
   static async updateProfile(req, res) {
@@ -47,6 +49,29 @@ export default class UserController {
     } catch (error) {
       console.error(error);
       return res.status(500).json({ error: 'An error occurred' });
+    }
+  }
+
+  static async getUserInfo(req, res) {
+    try {
+      const errors = validationResult(req);
+
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+      const { userId } = req.params;
+      if (!userId) {
+        return res.status(400).json({error: 'invalid or missing parameter'});
+      }
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({error: 'user not found'});
+      }
+      const userInfo =  await BaseController.userSerializer(user);
+      return res.status(200).json(userInfo);
+    } catch(error) {
+      console.error(`getUserInfo: ${error}`);
+      return res.status(500).json({error: 'internal server error'});
     }
   }
 }

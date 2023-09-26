@@ -1,13 +1,20 @@
 import FilesController from './FilesController';
 import Content from '../models/content';
+import User from '../models/user';
 
 export default class ContentController {
   static async createContent(req, res) {
     try {
+      const user = await User.findById(req.user.id);
+      if (!user) {
+        return res.status(500).json({error: 'internal server error'});
+      }
       const content = await FilesController.createContent(req, res);
       if (!content) {
         throw new Error('Content creation error')
       }
+      user.post.push(content.id);
+      await user.save();
       return res.status(201).json(content);
     } catch (error) {
       console.error(error);
