@@ -108,5 +108,27 @@ router.get(
     UserController.getUserInfo
 );
 
+/**
+ * GET /user/feeds
+ *
+ * Endpoint to fetch user feeds.
+ * The request should include the following query parameters:
+ * - page: The page to fetch.
+ * - pageSize: The number of items per page
+ *
+ * Authentication is required to access this endpoint
+ * Example request:
+ * GET /user/feeds?page=1&pageSize=20  pagesize is optional
+ *
+ * @function feeds
+ * @memberof ContentController
+ * @param {Request} req - Express Request object.
+ * @param {Response} res - Express Response object.
+ */
+router.get(
+    '/user/feeds',
+    authenticateJWT,
+    ContentController.feeds
+)
 
 export default router;

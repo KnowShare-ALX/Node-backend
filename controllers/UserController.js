@@ -7,7 +7,7 @@ export default class UserController {
   static async updateProfile(req, res) {
     const user = req.user;
     const allowedFields = [
-      'bio',
+      'biography',
       'lastName',
       'firstName',
       'dateOfBirth',

@@ -1,6 +1,8 @@
 import FilesController from './FilesController';
 import Content from '../models/content';
 import User from '../models/user';
+import FeedsHandler from '../utils/feeds';
+import { validationResult} from 'express-validator';
 
 export default class ContentController {
   static async createContent(req, res) {
@@ -36,6 +38,40 @@ export default class ContentController {
     } catch(error) {
       console.error(`getContentError: ${error}`);
       return res.status(500).json({error: 'internal server error'});
+    }
+  }
+
+  static async feeds(req, res) {
+    try {
+      const errors = validationResult(req);
+
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+      let { page, pageSize } = req.query;
+      pageSize = Number.isNaN(pageSize) ? 20: Number(pageSize);
+      page = Number.isNaN(page) ? 1 : Number(page);
+      const feeds = await FeedsHandler.generateDefault();
+      const data = FeedsHandler.getPage(feeds, page, pageSize);
+      if (data.length === 0) {
+        throw new Error('Returned an emty array');
+      } else{
+        const paginationResult = FeedsHandler.simplePagination(page, pageSize);
+        let start = paginationResult.start;
+        let end = paginationResult.end;        
+        const doc = {
+          pageSize: data.length,
+          page: page,
+          data: data,
+          previousPage: start > 0 ? page - 1: null,
+          nextPage: data.length > end ? page + 1: null,
+          totalPages: Math.ceil(feeds.length / pageSize)
+        }
+        res.status(200).json(doc)
+      }
+    } catch(error) {
+      console.error(`FeedsError: ${error}`);
+      return res.status(404).json({error: 'Not found'})
     }
   }
 }
