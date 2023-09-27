@@ -78,9 +78,6 @@ class AuthController {
                         res.status(409).json({ message: 'User already exists' })
                         return Promise.reject('User already exists')
                     }
-
-                    // return await bycrypt.hash(password, saltRounds);
-                    console.log('this is the password' + password);
                     return await AuthHandler.hashPassword(password);
                       
                 })

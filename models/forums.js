@@ -11,25 +11,38 @@ const forumSchema = new mongoose.Schema({
     type: String,
     maxlength: 500,
   },
+  author: {
+    type: String,
+    ref: 'User'
+  },
+  contributors: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    }
+  ],
+  admins: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    }
+  ],
   members: [
     {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        unique: true,
+        ref: 'User'
     },
   ],
   moderators: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      unique: true,
     },
   ],
   posts: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Content',
-      unique: true,
     },
   ],
   createdDate: {

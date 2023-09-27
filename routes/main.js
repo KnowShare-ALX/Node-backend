@@ -6,6 +6,8 @@ import ContentController from '../controllers/ContentController';
 import CourseController from '../controllers/CourseController';
 const express = require('express');
 import multer from 'multer';
+import { body } from 'express-validator';
+import ForumController from '../controllers/ForumController';
 
 
 const storage = multer.memoryStorage(); // Store files in memory
@@ -129,6 +131,33 @@ router.get(
     '/user/feeds',
     authenticateJWT,
     ContentController.feeds
+)
+
+
+/**
+ * POST /forum/create
+ *
+ * Endpoint for creating forum.
+ * The request includes:
+ * - title: The name of the forum - must be unique (required)
+ * - description: About the forum - what it is about. (optional) 
+ *
+ * Authentication is required to access this endpoint
+ * Example request:
+ * POST /forum/create
+ *
+ * @function feeds
+ * @memberof ContentController
+ * @param {Request} req - Express Request object.
+ * @param {Response} res - Express Response object.
+ */
+router.post(
+    '/forums/create',
+    authenticateJWT,
+    [
+        body('title').exists()
+    ],
+    ForumController.createForum
 )
 
 export default router;

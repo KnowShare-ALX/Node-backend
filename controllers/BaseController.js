@@ -21,4 +21,7 @@ export class BaseController {
         doc.following = doc.following.length;
         return doc;
     }
+    static forumSerializer(document) {
+        return document._doc;
+    }
 }
