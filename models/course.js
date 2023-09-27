@@ -93,6 +93,17 @@ const courseSchema = new mongoose.Schema({
   }
 });
 
+courseSchema.methods.like = function(userId) {
+  const alreadyLiked = this.likes.some((like) => like.author.equals(userId));
+
+  if (!alreadyLiked) {
+    this.likes.push({ author: userId });
+    return this.save();
+  } else {
+    return Promise.resolve('User has already liked this course.');
+  }
+}
+
 courseSchema.pre('save', function(next) {
   const sections = this.sections;
   sections.forEach((section) => {

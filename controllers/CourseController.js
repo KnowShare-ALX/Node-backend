@@ -213,4 +213,28 @@ export default class CourseController {
       return res.status(500).json({ error: 'Internal server error' });
     }
   }
+
+  static async likeCourse(req, res) {
+    const { courseId } = req.params
+    const userId = req.user._id
+    console.log(userId)
+
+    try {
+      const course = await Course.findById(courseId).populate('likes');
+
+      if (!course) {
+        return res.status(404).json({ error: 'Course not found' })
+      }
+
+      console.log('before like func')
+      const result = await course.like(userId);
+      console.log('after like func')
+
+      return res.status(200).json({ message: result })
+
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+  }
 }

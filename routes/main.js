@@ -108,5 +108,10 @@ router.get(
     UserController.getUserInfo
 );
 
+router.post(
+    '/courses/:courseId/like',
+    authenticateJWT,
+    CourseController.likeCourse
+);
 
 export default router;
