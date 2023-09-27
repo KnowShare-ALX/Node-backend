@@ -27,13 +27,11 @@ const courseSchema = new mongoose.Schema({
     {
         title: {
             type: String,
-            unique: true,
             maxlength: 100,
         },
         contentId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Content',
-            unique: true
         },
     },
   ],
@@ -50,7 +48,6 @@ const courseSchema = new mongoose.Schema({
     {
         title: {
             type: String,
-            unique: true,
             maxlength: 100,
             required: true,
         },
@@ -58,7 +55,6 @@ const courseSchema = new mongoose.Schema({
             {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'Content',
-                unique: true,
             },
         ],
     },
@@ -68,7 +64,6 @@ const courseSchema = new mongoose.Schema({
       author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        unique: true
       },
       reason: {
         type: String,
@@ -85,7 +80,6 @@ const courseSchema = new mongoose.Schema({
       author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        unique: true
       },
     },
   ],
