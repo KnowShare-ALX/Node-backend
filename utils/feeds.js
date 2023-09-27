@@ -15,20 +15,28 @@ export default class FeedsHandler {
                 {
                   $sort: { createdAt: -1 } 
                 }
-              ]).toArray();
+            ]);
             return result;
         } catch(error) {
             console.error(`FeedsError: ${error}`);
             return;
         }      
     }
-    static getPage(data, page, pageSize) {
-        startPage = (page - 1) * pageSize;
-        endPage = startPage + pageSize;
 
+    static simplePagination(page, pageSize) {
+        return {
+          start: (page - 1) * pageSize,
+          end: ((page - 1) * pageSize) + pageSize
+        }
+    }
+
+    static getPage(data, page, pageSize) {
+        let startPage = (page - 1) * pageSize;
+        let endPage = startPage + pageSize;
         if (data.length > startPage) {
             return data.slice(startPage, endPage);
         }
         return [];
     }
+    
 }

@@ -60,4 +60,11 @@ export default class FileManager {
       return false
     }
   }
+  
+  static simplePagination(page, pageSize) {
+    return {
+      start: (page - 1) * 20,
+      end: start + pageSize
+    }
+  }
 }
