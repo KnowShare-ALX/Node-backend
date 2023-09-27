@@ -53,7 +53,7 @@ class AuthController {
                 email,
                 password,
                 firstName,
-                lastName,
+                lastName
              } = req.body;
             if (!email) {
                 res.status(400).json({ error: 'Email is required' });
@@ -89,7 +89,7 @@ class AuthController {
                         email: email,
                         password: hashedPassword,
                         firstName: firstName,
-                        lastName: lastName,
+                        lastName: lastName
                     }
 
                     const newUser = new User(userObj);
