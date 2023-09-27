@@ -13,6 +13,9 @@ export default class UserController {
       'dateOfBirth',
       'credentials',
       'location',
+      'github',
+      'linkedIn',
+      'twitter'
     ];
 
     try {

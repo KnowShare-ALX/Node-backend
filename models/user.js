@@ -23,7 +23,8 @@ export const userSchema = new mongoose.Schema({
      },
     biography: {
         type: String,
-        maxlength: 300
+        maxlength: 300,
+        default: 'happy to be part of Knowshare!'
     },
     joinedDate: {
         type: Date,
@@ -114,7 +115,16 @@ export const userSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: 'Course'
       }
-    ]
+    ],
+    linkedIn: {
+      type: String
+    },
+    twitter: {
+      type: String
+    },
+    github: {
+      type: String
+    }
   });
 
 const User = mongoose.model('User', userSchema);
